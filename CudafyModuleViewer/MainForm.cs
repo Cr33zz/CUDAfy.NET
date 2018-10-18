@@ -41,7 +41,7 @@ namespace CudafyModuleViewer
             Text = Text + string.Format(" ({0}-bit)", IntPtr.Size == 4 ? "32" : "64");
 
             cbArch.Items.AddRange(Enum.GetNames(typeof(eArchitecture)));
-            int index = cbArch.Items.IndexOf(Enum.GetName(typeof(eArchitecture), eArchitecture.sm_20));
+            int index = cbArch.Items.IndexOf(Enum.GetName(typeof(eArchitecture), eArchitecture.Default));
             cbArch.SelectedIndex = index;
             try
             {

@@ -7,7 +7,7 @@ namespace Cudafy
     /// <summary>This utility class resolves path to nVidia's nvcc.exe and Microsoft's cl.exe.</summary>
     internal static class NvccExe
     {
-        /// <summary>Get GPU Computing Toolkit 7.0 installation path.</summary>
+        /// <summary>Get GPU Computing Toolkit 10.0 installation path.</summary>
         /// <remarks>Throws an exception if it's not installed.</remarks>
         static string getToolkitBaseDir()
         {
@@ -18,12 +18,20 @@ namespace Cudafy
             else
                 localKey = RegistryKey.OpenBaseKey( RegistryHive.LocalMachine, RegistryView.Registry64 );
 
-            RegistryKey registryKey = localKey.OpenSubKey( @"SOFTWARE\NVIDIA Corporation\GPU Computing Toolkit\CUDA\v7.0", false );
+            RegistryKey registryKey = localKey.OpenSubKey( @"SOFTWARE\NVIDIA Corporation\GPU Computing Toolkit\CUDA\v10.0", false );
             if( null == registryKey )
-                throw new CudafyCompileException( "nVidia GPU Toolkit error: version 7.0 is not installed." );
-            string res = registryKey.GetValue( "InstallDir" ) as string;
+                throw new CudafyCompileException( "nVidia GPU Toolkit error: version 10.0 is not installed." );
+
+            RegistryKey userKey;
+            if (Environment.Is64BitProcess || !Environment.Is64BitOperatingSystem)
+                userKey = Registry.CurrentUser;
+            else
+                userKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
+
+            registryKey = userKey.OpenSubKey(csCUDAfyRegKey, false);
+            string res = registryKey.GetValue("CUDAInstallDir") as string;
             if( null == res )
-                throw new CudafyCompileException( "nVidia GPU Toolkit error: corrupt installation" );
+                throw new CudafyCompileException( "nVidia GPU Toolkit error: unspecified installation directory in CUDAInstallDir in registry key [HKEY_CURRENT_USER\\Software\\CUDAfy.NET]" );
             if( !Directory.Exists( res ) )
                 throw new CudafyCompileException( "nVidia GPU Toolkit error: the installation directory \"" + res + "\" doesn't exist" );
             return res;
@@ -32,6 +40,7 @@ namespace Cudafy
         static readonly string toolkitBaseDir = getToolkitBaseDir();
 
         const string csNVCC = "nvcc.exe";
+        const string csCUDAfyRegKey = "Software\\CUDAfy.NET";
 
         /// <summary>Path to the nVidia's toolkit bin folder where nvcc.exe is located.</summary>
         public static string getCompilerPath()
@@ -48,48 +57,22 @@ namespace Cudafy
         /// <summary>Path to the Microsoft's visual studio folder where cl.exe is localed.</summary>
         public static string getClExeDirectory()
         {
-            // C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin
-
-            string[] versionsToTry = new string[] { "12.0", "11.0" };
-
-            RegistryKey localKey;
-            if( Environment.Is64BitProcess )
-                localKey = RegistryKey.OpenBaseKey( RegistryHive.LocalMachine, RegistryView.Registry32 );
+            RegistryKey userKey;
+            if (Environment.Is64BitProcess || !Environment.Is64BitOperatingSystem)
+                userKey = Registry.CurrentUser;
             else
-                localKey = Registry.LocalMachine;
+                userKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
 
-            RegistryKey vStudio = localKey.OpenSubKey( @"SOFTWARE\Wow6432Node\Microsoft\VisualStudio" );
-            if( null == vStudio )
-                throw new CudafyCompileException( "nVidia GPU Toolkit error: visual studio was not found" );
+            RegistryKey registryKey = userKey.OpenSubKey(csCUDAfyRegKey, false);
+            string clDir = registryKey.GetValue("CompilerDir") as string;
 
-            foreach( string ver in versionsToTry )
-            {
-                RegistryKey key = vStudio.OpenSubKey( ver );
-                if( null == key )
-                    continue;
-                string InstallDir = key.GetValue( "InstallDir" ) as string;
-                if( null == InstallDir )
-                    continue;
-                // C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\
+            if( !Directory.Exists(clDir) )
+                throw new CudafyCompileException("nVidia GPU Toolkit error: Visual Studio compiler directory \"" + clDir + "\" doesn't exist" );
 
-                InstallDir.TrimEnd( '\\', '/' );
-                string clDir = Path.GetFullPath( Path.Combine( InstallDir, @"..\..\VC\bin" ) );
-
-                if( Environment.Is64BitProcess )
-                {
-                    // In 64-bits processes we use a 64-bits compiler. If you'd like to always use the 32-bits one, remove this.
-                    clDir = Path.Combine( clDir, "amd64" );
-                }
-
-                // C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin
-                if( !Directory.Exists( clDir ) )
-                    continue;
-
-                string clPath = Path.Combine( clDir, "cl.exe" );
-                if( File.Exists( clPath ) )
-                    return clDir;
-            }
-
+            string clPath = Path.Combine( clDir, "cl.exe" );
+            if( File.Exists( clPath ) )
+                return clDir;
+            
             throw new CudafyCompileException( "nVidia GPU Toolkit error: cl.exe was not found" );
         }
     }

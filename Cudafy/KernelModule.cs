@@ -1376,6 +1376,8 @@ namespace Cudafy
 
                         if (process.ExitCode != 0)
                         {
+                            process.WaitForExit();
+
                             string s = standardOutput.ToString() + "\r\n" + standardError.ToString();
 
                             CompilerOutput += "\r\n" + s;

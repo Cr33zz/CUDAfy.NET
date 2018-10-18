@@ -232,10 +232,10 @@ namespace Cudafy
         /// CUDA Emulator
         /// </summary>
         Emulator = 8,
-        
+
         // CUDA has bit 7 set (256)
         // OpenCL start has bit 15 set (32768), CUDA no flag
-        
+
         /// <summary>
         /// CUDA sm_10
         /// </summary>
@@ -294,6 +294,10 @@ namespace Cudafy
         /// </summary>
         OpenCL12 = 32780,
 
+        /// <summary>
+        /// Default when unspecified
+        /// </summary>
+        Default = sm_30,
     }
 
     /// <summary>

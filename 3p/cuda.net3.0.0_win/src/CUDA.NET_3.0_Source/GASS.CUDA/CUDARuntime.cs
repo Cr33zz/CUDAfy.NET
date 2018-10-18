@@ -16,25 +16,14 @@ namespace GASS.CUDA
 #if LINUX
         internal const string DLL_NAME = "libcudart";
 #else
-        internal const string DLL_NAME = "cudart64_70";
-        internal const string DLL_NAME_PREV = "cudart64_65";
+        internal const string DLL_NAME = "cudart64_100";
 #endif
         [DllImport(DLL_NAME)]
         public static extern cudaError cudaGetDeviceProperties(ref cudaDeviceProp prop, int device);
 
-        [DllImport(DLL_NAME_PREV, EntryPoint = "cudaGetDeviceProperties")]
-        public static extern cudaError cudaGetDevicePropertiesPrev(ref cudaDeviceProp prop, int device);
-
         public cudaError GetDeviceProperties(ref cudaDeviceProp prop, int device)
         {
-            try
-            {
-                return cudaGetDeviceProperties(ref prop, device);
-            }
-            catch (DllNotFoundException)
-            {
-                return cudaGetDevicePropertiesPrev(ref prop, device);
-            }
+            return cudaGetDeviceProperties(ref prop, device);
         }
     }
 
@@ -44,25 +33,14 @@ namespace GASS.CUDA
 #if LINUX
         internal const string DLL_NAME = "libcudart";
 #else
-        internal const string DLL_NAME = "cudart32_70";
-        internal const string DLL_NAME_PREV = "cudart32_65";
+        internal const string DLL_NAME = "cudart32_100";
 #endif
         [DllImport(DLL_NAME)]
         public static extern cudaError cudaGetDeviceProperties(ref cudaDeviceProp prop, int device);
 
-        [DllImport(DLL_NAME_PREV, EntryPoint = "cudaGetDeviceProperties")]
-        public static extern cudaError cudaGetDevicePropertiesPrev(ref cudaDeviceProp prop, int device);
-
         public cudaError GetDeviceProperties(ref cudaDeviceProp prop, int device)
         {
-            try
-            {
-                return cudaGetDeviceProperties(ref prop, device);
-            }
-            catch (DllNotFoundException)
-            {
-                return cudaGetDevicePropertiesPrev(ref prop, device);
-            }
+            return cudaGetDeviceProperties(ref prop, device);
         }
     }
 
@@ -84,7 +62,7 @@ namespace GASS.CUDA
 #if LINUX
         internal const string CUDART_DLL_NAME = "libcudart";
 #else
-        internal const string CUDART_DLL_NAME = "cudart64_65";
+        internal const string CUDART_DLL_NAME = "cudart64_100";
 #endif
         [DllImport(CUDART_DLL_NAME)]
         public static extern cudaError cudaBindTexture(ref SizeT offset, ref textureReference texref, CUdeviceptr devPtr, ref cudaChannelFormatDesc desc, SizeT size);

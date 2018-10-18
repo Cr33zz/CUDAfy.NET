@@ -39,7 +39,7 @@ namespace Cudafy
         /// <param name="assembly">The assembly.</param>
         /// <param name="arch">The architecture.</param>
         /// <returns>Output messages of the cudafycl.exe process.</returns>
-        public static string Cudafy(this Assembly assembly, eArchitecture arch = eArchitecture.sm_20)
+        public static string Cudafy(this Assembly assembly, eArchitecture arch = eArchitecture.Default)
         {
             string messages;
             if(!TryCudafy(assembly, out messages, arch))
@@ -55,7 +55,7 @@ namespace Cudafy
         /// <returns>
         ///   <c>true</c> if successful; otherwise, <c>false</c>.
         /// </returns>
-        public static bool TryCudafy(this Assembly assembly, eArchitecture arch = eArchitecture.sm_20)
+        public static bool TryCudafy(this Assembly assembly, eArchitecture arch = eArchitecture.Default)
         {
             string messages;
             return TryCudafy(assembly, out messages, arch);
@@ -70,7 +70,7 @@ namespace Cudafy
         /// <returns>
         ///   <c>true</c> if successful; otherwise, <c>false</c>.
         /// </returns>
-        public static bool TryCudafy(this Assembly assembly, out string messages, eArchitecture arch = eArchitecture.sm_20)
+        public static bool TryCudafy(this Assembly assembly, out string messages, eArchitecture arch = eArchitecture.Default)
         {
             var assemblyName = assembly.Location;
             Process process = new Process();
