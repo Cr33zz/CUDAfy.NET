@@ -29,12 +29,15 @@ namespace Cudafy
                 userKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
 
             registryKey = userKey.OpenSubKey(csCUDAfyRegKey, false);
-            string res = registryKey.GetValue("CUDAInstallDir") as string;
-            if( null == res )
-                throw new CudafyCompileException( "nVidia GPU Toolkit error: unspecified installation directory in CUDAInstallDir in registry key [HKEY_CURRENT_USER\\Software\\CUDAfy.NET]" );
-            if( !Directory.Exists( res ) )
-                throw new CudafyCompileException( "nVidia GPU Toolkit error: the installation directory \"" + res + "\" doesn't exist" );
-            return res;
+            if (null == registryKey)
+                throw new CudafyCompileException( "nVidia GPU Toolkit error: [HKEY_CURRENT_USER\\" + csCUDAfyRegKey + "] does not exist" );
+
+            string cudaDir = registryKey.GetValue("CUDAInstallDir") as string;
+            if( null == cudaDir )
+                throw new CudafyCompileException( "nVidia GPU Toolkit error: unspecified installation directory in CUDAInstallDir in registry key [HKEY_CURRENT_USER\\" + csCUDAfyRegKey + "]" );
+            if( !Directory.Exists( cudaDir ) )
+                throw new CudafyCompileException( "nVidia GPU Toolkit error: the installation directory \"" + cudaDir + "\" doesn't exist" );
+            return cudaDir;
         }
 
         static readonly string toolkitBaseDir = getToolkitBaseDir();
@@ -64,10 +67,14 @@ namespace Cudafy
                 userKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
 
             RegistryKey registryKey = userKey.OpenSubKey(csCUDAfyRegKey, false);
-            string clDir = registryKey.GetValue("CompilerDir") as string;
+            if (null == registryKey)
+                throw new CudafyCompileException( "nVidia GPU Toolkit error: [HKEY_CURRENT_USER\\" + csCUDAfyRegKey + "] does not exist" );
 
-            if( !Directory.Exists(clDir) )
-                throw new CudafyCompileException("nVidia GPU Toolkit error: Visual Studio compiler directory \"" + clDir + "\" doesn't exist" );
+            string clDir = registryKey.GetValue("CompilerDir") as string;
+            if (null == clDir)
+                throw new CudafyCompileException( "nVidia GPU Toolkit error: unspecified compiler directory in CompilerDir in registry key [HKEY_CURRENT_USER\\" + csCUDAfyRegKey + "]" );
+            if ( !Directory.Exists(clDir) )
+                throw new CudafyCompileException( "nVidia GPU Toolkit error: Visual Studio compiler directory \"" + clDir + "\" doesn't exist" );
 
             string clPath = Path.Combine( clDir, "cl.exe" );
             if( File.Exists( clPath ) )
