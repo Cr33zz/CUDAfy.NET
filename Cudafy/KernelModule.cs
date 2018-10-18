@@ -1266,6 +1266,8 @@ namespace Cudafy
 
                     if (process.ExitCode != 0)
                     {
+                        process.WaitForExit();
+
                         string s = standardError.ToString(); //process.StandardError.ReadToEnd();
                         
                         CompilerOutput += "\r\n" + s;
@@ -1352,6 +1354,7 @@ namespace Cudafy
                         process.StartInfo.RedirectStandardOutput = true;
                         process.StartInfo.RedirectStandardError = true;
                         process.StartInfo.CreateNoWindow = SuppressWindow;//WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                        process.StartInfo.EnvironmentVariables["PATH"] += ";" + string.Join(";", p.PathEnvVarExtraEntries);
                         process.StartInfo.FileName = string.Format(@"""{0}""", p.CompilerPath);
                         process.StartInfo.Arguments = p.GetCommandString();
                         p.Platform = originalPlatformSetting;
