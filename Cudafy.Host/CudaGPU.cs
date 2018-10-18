@@ -482,7 +482,7 @@ namespace Cudafy.Host
             string addInfo = string.Empty;
             switch (ex.CUDAError)
             {
-                case CUResult.ECCUncorrectable:
+                case CUResult.ErrorEccUncorrectable:
                     break;
                 case CUResult.ErrorAlreadyAcquired:
                     break;
@@ -518,7 +518,7 @@ namespace Cudafy.Host
                     break;
                 case CUResult.ErrorMapFailed:
                     break;
-                case CUResult.ErrorNoBinaryForGPU:
+                case CUResult.ErrorNoBinaryForGpu:
                     addInfo = "Ensure that compiled architecture version is suitable for device"; 
                     break;
                 case CUResult.ErrorNoDevice:
@@ -539,13 +539,11 @@ namespace Cudafy.Host
                     break;
                 case CUResult.ErrorUnmapFailed:
                     break;
-                case CUResult.NotMappedAsArray:
+                case CUResult.ErrorNotMappedAsArray:
                     break;
-                case CUResult.NotMappedAsPointer:
+                case CUResult.ErrorNotMappedAsPointer:
                     break;
-                case CUResult.PointerIs64Bit:
-                    break;
-                case CUResult.SizeIs64Bit:
+                case CUResult.ErrorNotPermitted:
                     break;
                 case CUResult.Success:
                     break;
