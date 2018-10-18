@@ -482,70 +482,17 @@ namespace Cudafy.Host
             string addInfo = string.Empty;
             switch (ex.CUDAError)
             {
-                case CUResult.ErrorEccUncorrectable:
-                    break;
-                case CUResult.ErrorAlreadyAcquired:
-                    break;
-                case CUResult.ErrorAlreadyMapped:
-                    break;
-                case CUResult.ErrorArrayIsMapped:
-                    break;
-                case CUResult.ErrorContextAlreadyCurrent:
-                    break;
-                case CUResult.ErrorDeinitialized:
-                    break;
-                case CUResult.ErrorFileNotFound:
-                    break;
-                case CUResult.ErrorInvalidContext:
-                    break;
-                case CUResult.ErrorInvalidDevice:
-                    break;
-                case CUResult.ErrorInvalidHandle:
-                    break;
-                case CUResult.ErrorInvalidImage:
-                    break;
-                case CUResult.ErrorInvalidSource:
-                    break;
-                case CUResult.ErrorInvalidValue:
-                    break;
-                case CUResult.ErrorLaunchFailed:
-                    break;
-                case CUResult.ErrorLaunchIncompatibleTexturing:
-                    break;
-                case CUResult.ErrorLaunchOutOfResources:
-                    break;
-                case CUResult.ErrorLaunchTimeout:
-                    break;
-                case CUResult.ErrorMapFailed:
+                case CUResult.ErrorInvalidPtx:
+                    addInfo = "Ensure that latest Display Driver version is installed";
                     break;
                 case CUResult.ErrorNoBinaryForGpu:
                     addInfo = "Ensure that compiled architecture version is suitable for device"; 
                     break;
-                case CUResult.ErrorNoDevice:
-                    break;
-                case CUResult.ErrorNotFound:
-                    break;
                 case CUResult.ErrorNotInitialized:
                     addInfo = "Ensure that suitable GPU and CUDA is correctly installed. If newly installed then reboot may be necessary.";
                     break;
-                case CUResult.ErrorNotMapped:
-                    break;
-                case CUResult.ErrorNotReady:
-                    break;
                 case CUResult.ErrorOutOfMemory:
                     addInfo = "Ensure that memory on GPU is being explicitly released with Free()"; 
-                    break;
-                case CUResult.ErrorUnknown:
-                    break;
-                case CUResult.ErrorUnmapFailed:
-                    break;
-                case CUResult.ErrorNotMappedAsArray:
-                    break;
-                case CUResult.ErrorNotMappedAsPointer:
-                    break;
-                case CUResult.ErrorNotPermitted:
-                    break;
-                case CUResult.Success:
                     break;
                 default:
                     break;
